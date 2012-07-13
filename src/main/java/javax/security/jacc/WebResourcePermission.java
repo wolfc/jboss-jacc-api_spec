@@ -418,6 +418,25 @@ public final class WebResourcePermission
       }
    }
 
+   static boolean matchExceptionList(TreeSet<String> myExceptionList, TreeSet<String> matchingExceptionList)
+   {
+      boolean bothnull = (myExceptionList == null && matchingExceptionList == null);
+      boolean onenull = (myExceptionList == null && matchingExceptionList != null)
+            || (myExceptionList != null && matchingExceptionList == null);
+
+      if (bothnull)
+         return true;
+      if (onenull)
+         return false;
+
+      for (String httpMethod : matchingExceptionList)
+      {
+         if (!myExceptionList.contains(httpMethod))
+            return false;
+      }
+      return true;
+   }
+
    private void readObject(ObjectInputStream ois)
       throws ClassNotFoundException, IOException
    {
@@ -433,24 +452,4 @@ public final class WebResourcePermission
       fields.put("actions", this.getActions());
       oos.writeFields();
    } 
-   
-   static boolean matchExceptionList(TreeSet<String> myExceptionList,
-          TreeSet<String> matchingExceptionList)
-   { 
-      boolean bothnull = (myExceptionList == null && matchingExceptionList == null);
-      boolean onenull = (myExceptionList == null && matchingExceptionList != null)
-               || (myExceptionList != null && matchingExceptionList == null);
-      
-      if(bothnull)
-         return true;
-      if(onenull)
-         return false;  
-      
-      for(String httpMethod: matchingExceptionList)
-      {
-         if(myExceptionList.contains(httpMethod))
-            return false;
-      }
-      return true;
-   }
 }
